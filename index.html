@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>WaveGen</title>
+		<script type="text/javascript" src="main.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+
+	<body onload="onLoad()">
+		<div id="content">
+			<div>
+				<input
+					id="freq1-range"
+					type="range"
+					onChange="change(this)"
+					step="0.01"
+				/>
+				<div id="freq1-range-value" class="value"></div>
+			</div>
+			<div>
+				<input
+					id="freq2-range"
+					type="range"
+					onChange="change(this)"
+					step="0.01"
+				/>
+				<div id="freq2-range-value" class="value"></div>
+			</div>
+			<!-- 			
+			<div>
+				<button onClick="start()">start</button>
+			</div> -->
+			<!-- <canvas id="canvas" width="800" height="200"></canvas> -->
+		</div>
+	</body>
+</html>
