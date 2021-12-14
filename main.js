@@ -5,13 +5,18 @@ const freqRange = {
 };
 let freq1 = 220;
 let freq2 = 220;
+
+const buffers = {};
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 let source;
 
-function onLoad() {}
+function onLoad() {
+	loadTrack('sweet dreams - mono');
+	loadTrack('all I have to do is dream - mono');
+}
 
 function start() {
-	const secs = 40;
+	const secs = 240;
 	const arrayBuffer = audioCtx.createBuffer(
 		1,
 		audioCtx.sampleRate * secs,
@@ -27,12 +32,18 @@ function start() {
 	// // console.log('audioCtx.sampleRate', audioCtx.sampleRate);
 	// // console.log('arrayBuffer.length', arrayBuffer.length);
 	const buffer = arrayBuffer.getChannelData(0);
+	const data1 = buffers['sweet dreams - mono'].getChannelData(0);
+	const data2 = buffers['all I have to do is dream - mono'].getChannelData(0);
 	for (let i = 0; i < arrayBuffer.length; i++) {
-		const a = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
-		// const a2 = Math.PI / 2;
-		const a2 = (i * 2 * Math.PI * freq2) / audioCtx.sampleRate;
-		// console.log(i, Math.sin(a) * Math.sin(a2));
-		buffer[i] = Math.sin(a) * Math.sin(a2);
+		// buffer[i] = data1[i] * data2[i];
+		const a1 = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
+		buffer[i] = data1[i] * Math.sin(a1);
+
+		// const a1 = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
+		// // const a2 = Math.PI / 2;
+		// const a2 = (i * 2 * Math.PI * freq2) / audioCtx.sampleRate;
+		// // console.log(i, Math.sin(a) * Math.sin(a2));
+		// buffer[i] = Math.sin(a1) * Math.sin(a2);
 	}
 
 	// {
@@ -68,7 +79,8 @@ function loadTrack(fileName) {
 	request.responseType = 'arraybuffer';
 	request.onload = () => {
 		audioCtx.decodeAudioData(request.response, (audioBuffer) => {
-			buffers[clip.fileName] = audioBuffer;
+			buffers[fileName] = audioBuffer;
+			console.log('loaded', fileName);
 		});
 	};
 	request.send();
