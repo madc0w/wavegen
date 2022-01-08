@@ -1,9 +1,9 @@
 const baseUrl = 'https://madc0w.github.io/wavegen/tracks';
 const freqRange = {
-	min: 0.4,
-	max: 2000,
+	min: 0,
+	max: 4000,
 };
-let freq1 = 220;
+let freq1 = 100;
 let freq2 = 220;
 
 const buffers = {};
@@ -34,10 +34,19 @@ function start() {
 	const buffer = arrayBuffer.getChannelData(0);
 	const data1 = buffers['sweet dreams - mono'].getChannelData(0);
 	const data2 = buffers['all I have to do is dream - mono'].getChannelData(0);
-	for (let i = 0; i < arrayBuffer.length; i++) {
+	console.log('computing buffer...');
+	for (let i = Math.floor(freq1); i < arrayBuffer.length; i++) {
 		// buffer[i] = data1[i] * data2[i];
-		const a1 = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
-		buffer[i] = data1[i] * Math.sin(a1);
+		// const a1 = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
+		// buffer[i] = Math.sign(data1[i]) * Math.pow(Math.abs(data1[i]), freq1);
+		let t = 0;
+		for (let j = 0; j < freq1; j++) {
+			buffer[i] += j * data1[i - j];
+			t += j;
+		}
+		buffer[i] /= t;
+		// buffer[i] = (data1[i] + data1[Math.floor(i + freq1)]) / 2;
+		// console.log(data1[i], buffer[i]);
 
 		// const a1 = (i * 2 * Math.PI * freq1) / audioCtx.sampleRate;
 		// // const a2 = Math.PI / 2;
@@ -45,6 +54,7 @@ function start() {
 		// // console.log(i, Math.sin(a) * Math.sin(a2));
 		// buffer[i] = Math.sin(a1) * Math.sin(a2);
 	}
+	console.log('buffer computed');
 
 	// {
 	// 	const oscillator = audioCtx.createOscillator();
